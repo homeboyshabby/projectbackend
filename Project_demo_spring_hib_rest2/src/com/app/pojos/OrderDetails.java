@@ -25,7 +25,7 @@ public class OrderDetails {
 	private double orderItemAmt;
 	private Customer custId;
 	private Orders orderId;
-	//private List<MenuItems> itemId = new ArrayList<MenuItems>();
+	private MenuItems itemId;
 	private DiningTable tableId;
 	public OrderDetails() {
 		// TODO Auto-generated constructor stub
@@ -75,14 +75,14 @@ public class OrderDetails {
 	public void setOrderId(Orders orderId) {
 		this.orderId = orderId;
 	}
-//	@OneToMany
-//	@JoinColumn(name = "item_id")
-//	public List<MenuItems> getItemId() {
-//		return itemId;
-//	}
-//	public void setItemId(List<MenuItems> itemId) {
-//		this.itemId = itemId;
-//	}
+	@ManyToOne
+	@JoinColumn(name = "item_id")
+	public MenuItems getItemId() {
+		return itemId;
+	}
+	public void setItemId(MenuItems itemId) {
+		this.itemId = itemId;
+	}
 	@OneToOne
 	@JoinColumn(name = "table_id")
 	public DiningTable getTableId() {
