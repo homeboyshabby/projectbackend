@@ -67,7 +67,7 @@ public class OrderDetails {
 	public void setCustId(Customer custId) {
 		this.custId = custId;
 	}
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "order_id")
 	public Orders getOrderId() {
 		return orderId;

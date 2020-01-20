@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dao.ICustomerDao;
+import com.app.pojos.Bills;
 import com.app.pojos.Customer;
 import com.app.pojos.MenuItems;
+import com.app.pojos.OrderDetails;
 import com.app.pojos.Orders;
 import com.app.pojos.Reservation;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 @RestController
 @CrossOrigin
@@ -86,13 +89,45 @@ public class CustomerController {
 
 	@PostMapping("/addmyreservation/{id}")
 	public ResponseEntity<?> addMyReservation(@RequestBody Reservation r,@PathVariable int id) {
-		//System.out.println(r.setCustId(custDao.getMyDetails(id).getId()));
 		try {
 			custDao.addMyReservations(r,id);
 			return new ResponseEntity<String>("Reserved", HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Not Reserved", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	@GetMapping("/setorder/{id}")
+	public ResponseEntity<?> setOrderId(@PathVariable int id) {
+		 //System.out.println(id);
+		Orders order = custDao.getOrderId(id);
+		// System.out.println(listOfOrders);
+		if (order == null)
+			return new ResponseEntity<String>("No Data Found", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Orders>(order, HttpStatus.OK);
+	}
+	@PostMapping("/addorderdetails/{id}")
+	public ResponseEntity<?> addOrderDetails(@RequestBody OrderDetails o,@PathVariable int id) {
+		System.out.println(o);
+		try {
+			custDao.addOrderDetails(o,id);
+			return new ResponseEntity<String>("Added", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Not Added", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
+	@PostMapping("/genratebill")
+	public ResponseEntity<?> generateBill(@RequestBody Bills b) {
+		System.out.println(b);
+		try {
+			custDao.generateBill(b);
+			return new ResponseEntity<String>("Added", HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Not Added", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 }

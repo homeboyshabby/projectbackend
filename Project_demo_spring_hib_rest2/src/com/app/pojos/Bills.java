@@ -59,7 +59,7 @@ public class Bills {
 	public void setBillDisc(double billDisc) {
 		this.billDisc = billDisc;
 	}
-	@JsonIgnore
+	//@JsonIgnore
 	@OneToOne
 	@JoinColumn(name = "order_id")
 	public Orders getOrder() {

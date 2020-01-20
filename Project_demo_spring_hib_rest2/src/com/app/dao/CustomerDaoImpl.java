@@ -1,5 +1,6 @@
 package com.app.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -8,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.pojos.Bills;
 import com.app.pojos.Customer;
 import com.app.pojos.MenuItems;
+import com.app.pojos.OrderDetails;
+import com.app.pojos.OrderType;
 import com.app.pojos.Orders;
 import com.app.pojos.Reservation;
 import com.app.pojos.User;
@@ -138,6 +142,29 @@ public class CustomerDaoImpl implements ICustomerDao {
 	public void addMyReservations(Reservation r,int id) {
 		r.setCustId(new Customer(id));
 		sf.getCurrentSession().persist(r);
+	}
+
+	@Override
+	public Orders getOrderId(int custId) {
+		Orders order = new Orders(new Date(System.currentTimeMillis()),OrderType.valueOf("HOMEDELIVERY"));
+		order.setCustId(new Customer(custId));
+		System.err.println(order.toString());
+		sf.getCurrentSession().persist(order);
+		//String jpql = "select o from Orders o where o.custId.id = :id";
+		String jpql = "select o from Orders o where o.orderId = (select MAX(o.orderId) from o) ";
+		return sf.getCurrentSession().createQuery(jpql, Orders.class).getSingleResult();
+	}
+
+	@Override
+	public void addOrderDetails(OrderDetails o,int id) {
+		o.setCustId(new Customer(id));
+		sf.getCurrentSession().persist(o);	
+	}
+
+	@Override
+	public void generateBill(Bills b) {
+		b.setBillDate(new Date(System.currentTimeMillis()));
+		sf.getCurrentSession().persist(b);
 	}
 
 }

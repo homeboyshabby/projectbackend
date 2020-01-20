@@ -21,6 +21,9 @@ public class MenuItems {
 		this.itemDesc = itemDesc;
 		this.itemPrice = itemPrice;
 	}
+	public MenuItems(Integer id) {
+		this.itemId = id;
+	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "item_id")

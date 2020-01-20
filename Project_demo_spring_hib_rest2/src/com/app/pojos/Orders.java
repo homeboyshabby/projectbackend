@@ -1,6 +1,8 @@
 package com.app.pojos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -16,7 +18,7 @@ public class Orders {
 	private Integer orderId;
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date orderDate;
-	private OrderDetails details;
+	private List<OrderDetails> details = new ArrayList<>();
 	private Customer custId;
 	private OrderType orderType;
 	private Bills bill;
@@ -26,6 +28,14 @@ public class Orders {
 	public Orders(Date orderDate) {
 		super();
 		this.orderDate = orderDate;
+	}
+	public Orders(Date orderDate, OrderType orderType) {
+		super();
+		this.orderDate = orderDate;
+		this.orderType = orderType;
+	}
+	public Orders(Integer oId) {
+		this.orderId = oId;
 	}
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,11 +54,12 @@ public class Orders {
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
-	@OneToOne(mappedBy = "orderId",cascade = CascadeType.ALL,orphanRemoval = true)
-	public OrderDetails getDetails() {
+	@JsonIgnore
+	@OneToMany(mappedBy = "orderId",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+	public List<OrderDetails> getDetails() {
 		return details;
 	}
-	public void setDetails(OrderDetails details) {
+	public void setDetails(List<OrderDetails> details) {
 		this.details = details;
 	}
 	@ManyToOne
