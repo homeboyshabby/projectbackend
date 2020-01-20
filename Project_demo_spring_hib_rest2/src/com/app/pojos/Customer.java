@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "customers")
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer {
 	private Integer id;
 	private Address address;
@@ -95,7 +95,7 @@ public class Customer {
 		this.orders = orders;
 	}
 	
-	@OneToMany(mappedBy = "custId",cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(mappedBy = "custId",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
 	@JsonIgnore
 	public Set<OrderDetails> getOrderDetails() {
 		return orderDetails;

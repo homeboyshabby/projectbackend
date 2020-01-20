@@ -26,18 +26,30 @@ public class CustomerDaoImpl implements ICustomerDao {
 				+ " left outer join fetch cust.orderDetails";
 		return sf.getCurrentSession().createQuery(jpql, Customer.class).getResultList();
 	}	
-
+	
+	@Override
+	public List<Customer> getCurrentCustomers() {
+		String jpql = "select cust from Customer cust";
+		return sf.getCurrentSession().createQuery(jpql, Customer.class).getResultList();
+	}
+	
 	@Override
 	public void addCustomer(Customer c) {
 		sf.getCurrentSession().persist(c);
 	}
 
-	@Override
+//	@Override
+//	public Customer getCustomersAllDetails(int cid) {
+//		Customer cust = sf.getCurrentSession().load(Customer.class, cid);
+//		//Hibernate.initialize(cust.getOrderDetails());
+//		//System.out.println(cust);
+//		return cust;
+//	}
+	
 	public Customer getCustomersAllDetails(int cid) {
-		Customer cust = sf.getCurrentSession().load(Customer.class, cid);
-		Hibernate.initialize(cust.getOrderDetails());
-		// System.out.println(cust.getOrderDetails());
-		return cust;
+		String jpql = "select cust from Customer cust left outer join fetch cust.orders"
+				+ " left outer join fetch cust.orderDetails where cust.id = :id";
+		return sf.getCurrentSession().createQuery(jpql, Customer.class).setParameter("id", cid).getSingleResult();
 	}
 
 	@Override

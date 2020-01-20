@@ -11,6 +11,7 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 public interface ICustomerDao {
 	Customer authenticateUser(String email,String password) throws Exception;
 	List<Customer> getCustomers();
+	List<Customer> getCurrentCustomers();
 	Customer getCustomersAllDetails(int cid);
 	void addCustomer(Customer c);
 	List<Orders> showAllOrders(int custId);

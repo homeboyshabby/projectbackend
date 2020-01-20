@@ -20,6 +20,7 @@ import com.app.pojos.Customer;
 import com.app.pojos.Employee;
 import com.app.pojos.MenuItems;
 import com.app.pojos.Orders;
+import com.app.pojos.Reservation;
 
 @RestController
 @CrossOrigin
@@ -30,10 +31,9 @@ public class AdminController {
 	@Autowired
 	private IAdminDao adminDao;
 
-	@GetMapping
+	@GetMapping("/customers")
 	public ResponseEntity<?> getAllCustomers() {
-		List<Customer> listOfCustomers = custDao.getCustomers();
-		// System.out.println(listOfCustomers);
+		List<Customer> listOfCustomers = custDao.getCurrentCustomers();
 		if (listOfCustomers == null)
 			return new ResponseEntity<String>("No Data Found", HttpStatus.NO_CONTENT);
 		return new ResponseEntity<List<Customer>>(listOfCustomers, HttpStatus.OK);
@@ -44,16 +44,19 @@ public class AdminController {
 		custDao.addCustomer(c);
 	}
 
-	@GetMapping("/getcust/{no}")
-	public ResponseEntity<?> getCustomersDetails(@PathVariable int no) {
-		List<Object> list = new ArrayList<Object>();
-		Customer cust = custDao.getCustomersAllDetails(no);
-		list.add(cust);
-		list.add(cust.getOrderDetails());
-		list.add(cust.getOrders());
-		if (cust == null)
+	@GetMapping("/getcustorders/{no}")
+	public ResponseEntity<?> getCustomersOrderDetails(@PathVariable int no) {
+		List<Orders> list = custDao.showAllOrders(no);
+		if(list == null)
 			return new ResponseEntity<String>("No Data Found", HttpStatus.NO_CONTENT);
-		return new ResponseEntity<List<Object>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<Orders>>(list, HttpStatus.OK);
+	}
+	@GetMapping("/getcustreservations/{no}")
+	public ResponseEntity<?> getCustomersReservationDetails(@PathVariable int no) {
+		List<Reservation> list = custDao.getMyReservations(no);
+		if(list == null)
+			return new ResponseEntity<String>("No Data Found", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<List<Reservation>>(list, HttpStatus.OK);
 	}
 
 	@GetMapping("/orderdetails")
@@ -65,7 +68,7 @@ public class AdminController {
 	}
 
 	@PostMapping("/addmenu")
-	public ResponseEntity<?> addMenuItem(MenuItems m) {
+	public ResponseEntity<?> addMenuItem(@RequestBody MenuItems m) {
 		System.out.println(m);
 		try {
 			adminDao.addMenuItem(m);
